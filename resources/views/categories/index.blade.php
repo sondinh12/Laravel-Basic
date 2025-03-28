@@ -6,6 +6,12 @@
     </div>
 @endif
 
+@if (session('error'))
+    <div class="alert alert-danger">
+        {{session('error')}}
+    </div>
+@endif
+
 @section('title','Danh sách danh mục')
 
 @section('content')
@@ -33,15 +39,21 @@
                 <tr>
                     <td>{{$cate->id}}</td>
                     <td>{{$cate->name}}</td>
-                    <td>{{$cate->status ? "Hoạt động" : "Tạm dừng"}}</td>
+                    <td>{{ ["Tạm dừng", "Hoạt động", "Đã xóa"][$cate->status] ?? "Không xác định" }}</td>
                     <td>
+                        @if ($cate->status !== 2)
+                            <a href="{{route('categories.show',$cate->id)}}" class="btn btn-info">Show</a>
+                            <a href="{{route('categories.edit',$cate->id)}}" class="btn btn-warning">Sửa</a>
+                            <form action="{{ route('categories.destroy', $cate->id) }}" class="d-inline" method="POST" onsubmit="return confirm('Bạn có muốn xóa không?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">Xóa</button>
+                            </form>   
+                        @else       
+                        <span class="text-danger">Danh mục đã bị vô hiệu hóa</span>
+                        <a href="{{route('categories.backCate',$cate->id)}}"><button class="btn btn-info" onclick="return confirm('Bạn muốn khôi phục?')">Khôi phục</button></a>
                         <a href="{{route('categories.show',$cate->id)}}" class="btn btn-info">Show</a>
-                        <a href="{{route('categories.edit',$cate->id)}}" class="btn btn-warning">Sửa</a>
-                        <form action="{{ route('categories.destroy', $cate->id) }}" class="d-inline" method="POST" onsubmit="return confirm('Bạn có muốn xóa không?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Xóa</button>
-                        </form>                        
+                        @endif              
                     </td>
                 </tr>
             @endforeach

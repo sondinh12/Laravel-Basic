@@ -26,7 +26,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $categories = DB::table('categories')->get();
+        $categories = DB::table('categories')->where('status','1')->get();
         return view('products.create',compact('categories'));
     }
 
@@ -76,7 +76,7 @@ class ProductController extends Controller
         ->leftJoin('categories as c','p.category_id','=','c.id')
         ->select('p.*','c.name as cate_name')
         ->first();
-        $categories = DB::table('categories')->get();
+        $categories = DB::table('categories')->where('status','1')->get();
         return view('products.edit',compact('proOld','categories'));
     }
 
@@ -118,7 +118,13 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        DB::table('products')->where('id',$id)->delete();
-        return redirect()->route('products.index')->with('success','Xóa thành công');
+        DB::table('products')->where('id',$id)->update(['status'=>'2']);
+        return redirect()->route('products.index')->with('success','Ản thành công');
     }
+
+    public function backPro(string $id){
+        DB::table('products')->where('status','2')->where('id',$id)->update(['status'=>'1']);
+        return redirect()->route('products.index')->with('success','Khôi phục thành công');
+    }
+
 }

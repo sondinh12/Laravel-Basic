@@ -42,7 +42,15 @@
                     <p class="text-muted">{{$detailPro->description}}</p>
 
                     <strong>Trạng thái sản phẩm:</strong>
-                    <p class="text-muted">{{ $detailPro->status == 1 ? 'Hoạt động' : 'Tạm dừng' }}</p>
+                    <p class="text-muted">
+                        @if ($detailPro->status == 1)
+                            Hoạt động
+                        @elseif ($detailPro->status == 0)
+                            Tạm dừng
+                        @elseif ($detailPro->status == 2)
+                            Đã xóa
+                        @endif
+                    </p>
 
                     <div class="text-center mt-4">
                         <a href="{{ route('products.index') }}" class="btn btn-secondary">

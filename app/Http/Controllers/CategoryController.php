@@ -64,10 +64,22 @@ class CategoryController extends Controller
      */
     public function update(CategoryRequest $request, string $id)
     {
+        $oldStatus = DB::table('categories')->where('id', $id)->value('status');
+
         DB::table('categories')->where('id',$id)->update([
             'name'=>$request->name,
             'status'=> (bool) $request->status,
         ]);
+
+        // Nếu danh mục chuyển từ 1 -> 0, cập nhật sản phẩm về 0
+        if ($oldStatus == 1 && $request->status == 0) {
+            DB::table('products')->where('category_id', $id)->update(['status' => 0]);
+        }
+        
+        // Nếu danh mục chuyển từ 0 -> 1, cập nhật sản phẩm về 1
+        if ($oldStatus == 0 && $request->status == 1) {
+            DB::table('products')->where('category_id', $id)->update(['status' => 1]);
+        }
         return redirect()->route('categories.index')->with('success','Sửa danh mục thành công');
     }
 
@@ -75,16 +87,20 @@ class CategoryController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
-    {   
-        //set null cho danh mục sp
-        // DB::table('products')->where('category_id', $id)->update(['category_id' => NULL,'status'=>'0']);
-            
-        //xóa hết sp
-        DB::table('products')->where('category_id', $id)->delete();
-        $destroy = DB::table('categories')->where('id',$id)->delete();
-        if($destroy){
-            return redirect()->route('categories.index')->with('success','Xóa danh mục thành công');
+    {    
+        $productCount = DB::table('products')->where('category_id',$id)->count();
+        if($productCount > 0){
+            return redirect()->back()->with('error', 'Không thể xóa danh mục vì vẫn còn sản phẩm.');
         }
-       
+
+        $destroy = DB::table('categories')->where('id',$id)->update(['status'=>'2']);
+        if($destroy){
+            return redirect()->route('categories.index')->with('success','Ẩn danh mục thành công');
+        }
+    }
+
+    public function backCate(string $id){
+        DB::table('categories')->where('status','2')->where('id',$id)->update(['status'=>'1']);
+        return redirect()->route('categories.index')->with('success','Khôi phục thành công');
     }
 }

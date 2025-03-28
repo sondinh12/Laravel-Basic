@@ -46,8 +46,9 @@
                     </td>
                     <td>{{$pro->cate_name}}</td>
                     <td>{{$pro->description}}</td>
-                    <td>{{$pro->status ? "Hoạt động" : "Tạm dừng"}}</td>
+                    <td>{{ ["Tạm dừng", "Hoạt động", "Đã xóa"][$pro->status] ?? "Không xác định" }}</td>
                     <td>
+                        @if ($pro->status !== 2)
                         <a href="{{route('products.show',$pro->id)}}" class="btn btn-info">Show</a>
                         <a href="{{route('products.edit', $pro->id)}}" class="btn btn-warning">Sửa</a>
                         <form action="{{ route('products.destroy', $pro->id) }}" class="d-inline" method="POST"
@@ -56,6 +57,11 @@
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger">Xóa</button>
                         </form>
+                        @else       
+                        <span class="text-danger">Sản phẩm đã bị vô hiệu hóa</span>
+                        <a href="{{route('products.backPro',$pro->id)}}"><button class="btn btn-info" onclick="return confirm('Bạn muốn khôi phục?')">Khôi phục</button></a>
+                        <a href="{{route('products.show',$pro->id)}}" class="btn btn-info">Show</a>
+                        @endif   
                     </td>
                 </tr>
             @endforeach
