@@ -6,13 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+    protected $tablr = 'products';
+    
+    public $timestamps = false;
     protected $fillable = [
         'name',
         'price',
-        'quanity',
+        'quantity',
         'image',
         'category_id',
         'description',
         'status'
     ];
+
+    public function category(){
+        return $this->belongsTo(Category::class);
+    }
 }

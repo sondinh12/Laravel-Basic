@@ -15,12 +15,12 @@
             <h4>Sửa danh mục</h4>
         </div>
         <div class="cart-body">
-            <form action="{{route('categories.update',$cateOld->id)}}" method="post" enctype="multipart/form-data">
+            <form action="{{route('categories.update',$category->id)}}" method="post" enctype="multipart/form-data">
                 @csrf
                 @method('put')
                 <div class="mb-3">
                     <label class="form-lable">Tên danh mục</label>
-                    <input type="text" name="name" class="form-control" value="{{$cateOld->name}}">
+                    <input type="text" name="name" class="form-control" value="{{$category->name}}">
                     @error('name')
                         <div class="text-danger">{{$message}}</div>
                     @enderror
@@ -29,8 +29,8 @@
                     <label class="form-lable">Trạng thái</label>
                         {{-- <option value="">Chọn danh mục</option> --}}
                         <select name="status" class="form-control">
-                            <option value="1" {{ $cateOld->status == 1 ? 'selected' : '' }}>Hoạt động</option>
-                            <option value="0" {{ $cateOld->status == 0 ? 'selected' : '' }}>Tạm dừng</option>
+                            <option value="1" {{ $category->status == 1 ? 'selected' : '' }}>Hoạt động</option>
+                            <option value="0" {{ $category->status == 0 ? 'selected' : '' }}>Tạm dừng</option>
                         </select>                
                     @error('status')
                         <div class="text-danger">{{$message}}</div>

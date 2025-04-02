@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ProductRequest extends FormRequest
 {
@@ -26,8 +27,13 @@ class ProductRequest extends FormRequest
             'price'=>'required|integer|min:1',
             'quantity'=>'required|integer|min:1',
             'image' => 'file|mimes:jpg,png|max:2048',
-            'category_id'=>'required',
-            'status'=>'required'
+            'category_id'=>[
+                'required',
+                Rule::exists('categories','id')->where('status',1)
+            ],
+            'status'=>'required',
+            'description'=>'required'
+            
         ];
     }
 

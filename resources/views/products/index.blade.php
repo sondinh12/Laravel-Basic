@@ -42,9 +42,9 @@
                     <td>{{$pro->price}}</td>
                     <td>{{$pro->quantity}}</td>
                     <td>
-                        <img src="{{asset($pro->image)}}" alt="Ảnh sản phẩm" width="100px">
+                        <img src="{{asset('storage/' . $pro->image)}}" alt="Ảnh sản phẩm" width="100px">
                     </td>
-                    <td>{{$pro->cate_name}}</td>
+                    <td>{{$pro->category->name}}</td>
                     <td>{{$pro->description}}</td>
                     <td>{{ ["Tạm dừng", "Hoạt động", "Đã xóa"][$pro->status] ?? "Không xác định" }}</td>
                     <td>
